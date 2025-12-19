@@ -113,16 +113,6 @@ const ContactSection = () => {
               </div>
             </div>
 
-            {/* Availability */}
-            <div className="p-6 bg-gradient-card rounded-2xl border border-border/50">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                <span className="font-medium">Available for new projects</span>
-              </div>
-              <p className="text-muted-foreground text-sm">
-                Currently accepting freelance projects and full-time opportunities.
-              </p>
-            </div>
           </motion.div>
 
           {/* Contact Form */}

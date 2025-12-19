@@ -15,6 +15,12 @@ const AboutSection = () => {
     { name: "Web Development", level: 75 },
   ];
 
+  const stats = [
+    { value: "10+", label: "Years Experience" },
+    { value: "150+", label: "Projects Done" },
+    { value: "50+", label: "Happy Clients" },
+  ];
+
   return (
     <section id="about" className="py-32 relative" ref={ref}>
       <div className="container mx-auto px-6">
@@ -69,44 +75,53 @@ const AboutSection = () => {
             </div>
           </motion.div>
 
-          {/* Right - Visual Element */}
+          {/* Right - Image */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative"
           >
-            <div className="relative aspect-square max-w-md mx-auto">
+            <div className="relative max-w-md mx-auto">
               {/* Decorative Elements */}
               <div className="absolute inset-0 bg-gradient-accent rounded-3xl rotate-6 opacity-20" />
               <div className="absolute inset-0 bg-gradient-card rounded-3xl -rotate-3 border border-border/50" />
               
-              {/* Main Card */}
-              <div className="absolute inset-4 bg-card rounded-2xl border border-border/50 p-8 flex flex-col justify-center shadow-card">
-                <div className="space-y-6">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-accent flex items-center justify-center text-3xl font-bold text-primary-foreground shadow-glow">
-                    N
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold mb-2">Design Philosophy</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                      "Great design is invisible. It guides users seamlessly toward their 
-                      goals while creating moments of delight along the way."
-                    </p>
-                  </div>
-                  <div className="flex gap-3 flex-wrap">
-                    {["Figma", "Sketch", "Adobe XD", "Framer"].map((tool) => (
-                      <span
-                        key={tool}
-                        className="px-3 py-1 bg-secondary/50 rounded-full text-xs font-medium text-muted-foreground"
-                      >
-                        {tool}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+              {/* Main Image */}
+              <div className="relative rounded-2xl overflow-hidden border border-border/50 shadow-card">
+                <img
+                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=700&fit=crop&crop=face"
+                  alt="Navas Sali Maheen"
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
               </div>
             </div>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="grid grid-cols-3 gap-4 mt-8"
+            >
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
+                  className="text-center p-4 bg-gradient-card rounded-xl border border-border/50"
+                >
+                  <div className="text-2xl md:text-3xl font-bold text-primary mb-1">
+                    {stat.value}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
           </motion.div>
         </div>
       </div>

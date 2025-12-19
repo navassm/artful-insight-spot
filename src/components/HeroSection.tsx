@@ -18,7 +18,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden noise-overlay">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden noise-overlay py-32">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-hero" />
       
@@ -108,28 +108,6 @@ const HeroSection = () => {
             </Button>
           </motion.div>
 
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="grid grid-cols-3 gap-8 mt-20 max-w-lg mx-auto"
-          >
-            {[
-              { value: "10+", label: "Years Experience" },
-              { value: "150+", label: "Projects Done" },
-              { value: "50+", label: "Happy Clients" },
-            ].map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-primary mb-1">
-                  {stat.value}
-                </div>
-                <div className="text-xs md:text-sm text-muted-foreground">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </motion.div>
         </div>
       </div>
 
