@@ -1,7 +1,7 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { ExternalLink, ArrowUpRight, X } from "lucide-react";
+import { ExternalLink, ArrowUpRight } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 
 interface Project {
   id: number;
@@ -99,11 +98,19 @@ const projects: Project[] = [
   },
 ];
 
+// Extract unique categories
+const categories = ["All", ...Array.from(new Set(projects.map(p => p.category)))];
+
 const PortfolioSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  const filteredProjects = activeCategory === "All" 
+    ? projects 
+    : projects.filter(p => p.category === activeCategory);
 
   return (
     <section id="portfolio" className="py-32 relative" ref={ref}>
@@ -113,7 +120,7 @@ const PortfolioSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center max-w-2xl mx-auto mb-16"
+          className="text-center max-w-2xl mx-auto mb-12"
         >
           <span className="text-primary font-medium text-sm uppercase tracking-widest">
             Portfolio
@@ -126,85 +133,107 @@ const PortfolioSection = () => {
           </p>
         </motion.div>
 
-        {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group relative cursor-pointer"
-              onMouseEnter={() => setHoveredId(project.id)}
-              onMouseLeave={() => setHoveredId(null)}
-              onClick={() => setSelectedProject(project)}
-            >
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-card border border-border/50 transition-all duration-500 hover:border-primary/30 hover:shadow-glow">
-                {/* Project Image */}
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                
-                {/* Gradient Overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent`} />
-                
-                {/* Content */}
-                <div className="absolute inset-0 p-6 flex flex-col justify-between">
-                  <div className="flex justify-between items-start">
-                    <span className="px-3 py-1 bg-background/80 backdrop-blur-sm rounded-full text-xs font-medium text-primary">
-                      {project.category}
-                    </span>
-                    <motion.div
-                      animate={{ 
-                        rotate: hoveredId === project.id ? 45 : 0,
-                        scale: hoveredId === project.id ? 1.1 : 1
-                      }}
-                      className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors"
-                    >
-                      <ArrowUpRight 
-                        size={18} 
-                        className="text-primary group-hover:text-primary-foreground transition-colors" 
-                      />
-                    </motion.div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                      {project.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2 py-1 bg-secondary/50 rounded-md text-xs text-muted-foreground"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* View All */}
+        {/* Category Filter */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="text-center mt-12"
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex flex-wrap justify-center gap-3 mb-12"
         >
-          <button className="inline-flex items-center gap-2 text-primary font-medium hover:gap-4 transition-all">
-            View All Projects
-            <ExternalLink size={18} />
-          </button>
+          {categories.map((category) => (
+            <motion.button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 relative overflow-hidden ${
+                activeCategory === category
+                  ? "bg-primary text-primary-foreground shadow-glow"
+                  : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {activeCategory === category && (
+                <motion.span
+                  layoutId="activeCategory"
+                  className="absolute inset-0 bg-primary rounded-full -z-10"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              {category}
+            </motion.button>
+          ))}
+        </motion.div>
+
+        {/* Projects Grid */}
+        <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <AnimatePresence mode="popLayout">
+            {filteredProjects.map((project) => (
+              <motion.div
+                key={project.id}
+                layout
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.4, type: "spring", bounce: 0.3 }}
+                className="group relative cursor-pointer"
+                onMouseEnter={() => setHoveredId(project.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                onClick={() => setSelectedProject(project)}
+              >
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-card border border-border/50 transition-all duration-500 hover:border-primary/30 hover:shadow-glow">
+                  {/* Project Image */}
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  
+                  {/* Gradient Overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent`} />
+                  
+                  {/* Content */}
+                  <div className="absolute inset-0 p-6 flex flex-col justify-between">
+                    <div className="flex justify-between items-start">
+                      <span className="px-3 py-1 bg-background/80 backdrop-blur-sm rounded-full text-xs font-medium text-primary">
+                        {project.category}
+                      </span>
+                      <motion.div
+                        animate={{ 
+                          rotate: hoveredId === project.id ? 45 : 0,
+                          scale: hoveredId === project.id ? 1.1 : 1
+                        }}
+                        className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors"
+                      >
+                        <ArrowUpRight 
+                          size={18} 
+                          className="text-primary group-hover:text-primary-foreground transition-colors" 
+                        />
+                      </motion.div>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+                        {project.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                        {project.description}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {project.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-2 py-1 bg-secondary/50 rounded-md text-xs text-muted-foreground"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </motion.div>
       </div>
 
@@ -273,24 +302,6 @@ const PortfolioSection = () => {
                 <p className="text-foreground/80 text-sm leading-relaxed">
                   {selectedProject.role}
                 </p>
-              </div>
-
-              {/* Action Button */}
-              <div className="mt-6 flex gap-3">
-                <Button
-                  variant="hero"
-                  className="flex-1"
-                  onClick={() => window.open(selectedProject.url, '_blank')}
-                >
-                  View Live Project
-                  <ExternalLink size={16} className="ml-2" />
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setSelectedProject(null)}
-                >
-                  Close
-                </Button>
               </div>
             </>
           )}
