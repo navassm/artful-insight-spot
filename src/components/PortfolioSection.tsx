@@ -140,11 +140,15 @@ const PortfolioSection = () => {
               onClick={() => setSelectedProject(project)}
             >
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-card border border-border/50 transition-all duration-500 hover:border-primary/30 hover:shadow-glow">
-                {/* Gradient Background */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-50`} />
+                {/* Project Image */}
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
                 
-                {/* Pattern Overlay */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-[size:20px_20px]" />
+                {/* Gradient Overlay */}
+                <div className={`absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent`} />
                 
                 {/* Content */}
                 <div className="absolute inset-0 p-6 flex flex-col justify-between">
