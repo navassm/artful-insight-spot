@@ -14,11 +14,31 @@ const navItems = [
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
+      
+      // Determine active section based on scroll position
+      const sections = navItems.map(item => item.href.substring(1));
+      for (const section of sections.reverse()) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 150) {
+            setActiveSection(`#${section}`);
+            break;
+          }
+        }
+      }
+      
+      // Reset if at top
+      if (window.scrollY < 100) {
+        setActiveSection("");
+      }
     };
+    
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -60,13 +80,28 @@ const Navigation = () => {
                 <motion.button
                   key={item.name}
                   onClick={() => scrollToSection(item.href)}
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors relative group"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors relative py-2"
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
                   {item.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
+                  {/* Animated underline */}
+                  <motion.span
+                    className="absolute bottom-0 left-0 h-0.5 bg-primary rounded-full"
+                    initial={{ width: "0%" }}
+                    animate={{ 
+                      width: activeSection === item.href ? "100%" : "0%",
+                      opacity: activeSection === item.href ? 1 : 0
+                    }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  />
+                  {/* Hover underline */}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary/50 transition-all duration-300 group-hover:w-full hover:w-full rounded-full" 
+                    style={{ 
+                      width: activeSection === item.href ? '0%' : undefined 
+                    }}
+                  />
                 </motion.button>
               ))}
               <Button
@@ -104,12 +139,20 @@ const Navigation = () => {
                 <motion.button
                   key={item.name}
                   onClick={() => scrollToSection(item.href)}
-                  className="text-2xl font-medium text-foreground hover:text-primary transition-colors"
+                  className={`text-2xl font-medium transition-colors relative ${
+                    activeSection === item.href ? "text-primary" : "text-foreground hover:text-primary"
+                  }`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
                   {item.name}
+                  {activeSection === item.href && (
+                    <motion.span
+                      layoutId="mobileActiveIndicator"
+                      className="absolute -bottom-2 left-0 right-0 h-0.5 bg-primary rounded-full"
+                    />
+                  )}
                 </motion.button>
               ))}
               <Button
