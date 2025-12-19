@@ -241,9 +241,9 @@ const PortfolioSection = () => {
       <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-background/95 backdrop-blur-xl border-border/50">
           {selectedProject && (
-            <>
+            <div className="space-y-6">
               {/* Project Image */}
-              <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
+              <div className="relative w-full aspect-video rounded-xl overflow-hidden">
                 <img
                   src={selectedProject.image}
                   alt={selectedProject.title}
@@ -252,7 +252,7 @@ const PortfolioSection = () => {
                 <div className={`absolute inset-0 bg-gradient-to-t ${selectedProject.color} opacity-30`} />
               </div>
 
-              <DialogHeader>
+              <DialogHeader className="space-y-3">
                 <div className="flex items-center gap-3 mb-2">
                   <span className="px-3 py-1 bg-primary/10 rounded-full text-xs font-medium text-primary">
                     {selectedProject.category}
@@ -285,7 +285,7 @@ const PortfolioSection = () => {
               </a>
 
               {/* Project Description */}
-              <div className="mt-6">
+              <div>
                 <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">
                   Project Overview
                 </h4>
@@ -295,7 +295,7 @@ const PortfolioSection = () => {
               </div>
 
               {/* My Role */}
-              <div className="mt-6 p-4 rounded-xl bg-gradient-card border border-border/50">
+              <div className="p-4 rounded-xl bg-gradient-card border border-border/50">
                 <h4 className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">
                   My Role
                 </h4>
@@ -303,7 +303,7 @@ const PortfolioSection = () => {
                   {selectedProject.role}
                 </p>
               </div>
-            </>
+            </div>
           )}
         </DialogContent>
       </Dialog>
