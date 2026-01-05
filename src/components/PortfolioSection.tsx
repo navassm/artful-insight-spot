@@ -9,6 +9,13 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "@/components/ui/carousel";
 
 interface Project {
   id: number;
@@ -19,6 +26,7 @@ interface Project {
   tags: string[];
   color: string;
   image: string;
+  images: string[];
   url: string;
   role: string;
 }
@@ -33,6 +41,11 @@ const projects: Project[] = [
     tags: ["Dashboard", "Finance", "Data Viz"],
     color: "from-blue-500/20 to-cyan-500/20",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=600&fit=crop",
+    ],
     url: "https://example.com/fintech",
     role: "Lead UI/UX Designer - Responsible for end-to-end design process including user research, wireframing, prototyping, visual design, and design system creation.",
   },
@@ -45,6 +58,11 @@ const projects: Project[] = [
     tags: ["E-commerce", "Mobile", "Conversion"],
     color: "from-orange-500/20 to-red-500/20",
     image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=600&fit=crop",
+    ],
     url: "https://example.com/ecommerce",
     role: "Product Designer - Led design strategy, conducted A/B testing, created responsive designs, and collaborated with development team for seamless implementation.",
   },
@@ -57,6 +75,11 @@ const projects: Project[] = [
     tags: ["Health", "iOS", "UX Research"],
     color: "from-green-500/20 to-emerald-500/20",
     image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=600&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=600&fit=crop",
+    ],
     url: "https://example.com/health-app",
     role: "UX Lead - Conducted user research, designed information architecture, created interactive prototypes, and established design patterns for the mobile experience.",
   },
@@ -69,6 +92,11 @@ const projects: Project[] = [
     tags: ["Design System", "Components", "Documentation"],
     color: "from-purple-500/20 to-pink-500/20",
     image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=800&h=600&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1559028012-481c04fa702d?w=800&h=600&fit=crop",
+    ],
     url: "https://example.com/design-system",
     role: "Design System Lead - Architected the component library, established design principles, created documentation, and led cross-team adoption workshops.",
   },
@@ -81,6 +109,11 @@ const projects: Project[] = [
     tags: ["SaaS", "B2B", "Onboarding"],
     color: "from-yellow-500/20 to-orange-500/20",
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&h=600&fit=crop",
+    ],
     url: "https://example.com/saas",
     role: "Senior UX Designer - Redesigned core user flows, created onboarding experiences, conducted usability testing, and worked closely with product and engineering teams.",
   },
@@ -93,6 +126,11 @@ const projects: Project[] = [
     tags: ["Travel", "Booking", "Personalization"],
     color: "from-teal-500/20 to-blue-500/20",
     image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop",
+    ],
     url: "https://example.com/travel",
     role: "UI/UX Designer - Designed the booking flow, search experience, and personalization features while ensuring accessibility and cross-platform consistency.",
   },
@@ -242,15 +280,25 @@ const PortfolioSection = () => {
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-background/95 backdrop-blur-xl border-border/50">
           {selectedProject && (
             <div className="space-y-6">
-              {/* Project Image */}
-              <div className="relative w-full aspect-video rounded-xl overflow-hidden">
-                <img
-                  src={selectedProject.image}
-                  alt={selectedProject.title}
-                  className="w-full h-full object-cover"
-                />
-                <div className={`absolute inset-0 bg-gradient-to-t ${selectedProject.color} opacity-30`} />
-              </div>
+              {/* Project Image Carousel */}
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {selectedProject.images.map((img, index) => (
+                    <CarouselItem key={index}>
+                      <div className="relative w-full aspect-video rounded-xl overflow-hidden">
+                        <img
+                          src={img}
+                          alt={`${selectedProject.title} - Image ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className={`absolute inset-0 bg-gradient-to-t ${selectedProject.color} opacity-30`} />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-2" />
+                <CarouselNext className="right-2" />
+              </Carousel>
 
               <DialogHeader className="space-y-3">
                 <div className="flex items-center gap-3 mb-2">
