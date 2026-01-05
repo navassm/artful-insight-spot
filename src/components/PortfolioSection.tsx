@@ -17,6 +17,11 @@ import {
   CarouselNext,
 } from "@/components/ui/carousel";
 
+// Local project images
+import project1Slide1 from "@/assets/images/project1-slide1.jpg";
+import project1Slide2 from "@/assets/images/project1-slide2.jpg";
+import project1Slide3 from "@/assets/images/project1-slide3.jpg";
+
 interface Project {
   id: number;
   title: string;
@@ -40,12 +45,8 @@ const projects: Project[] = [
     fullDescription: "Led the complete redesign of a financial analytics platform, focusing on creating intuitive data visualizations that make complex financial data accessible to users. The project involved extensive user research, prototyping, and iterative design to achieve a 60% improvement in user task completion rates.",
     tags: ["Dashboard", "Finance", "Data Viz"],
     color: "from-blue-500/20 to-cyan-500/20",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
-    images: [
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=600&fit=crop",
-    ],
+    image: project1Slide1,
+    images: [project1Slide1, project1Slide2, project1Slide3],
     url: "https://example.com/fintech",
     role: "Lead UI/UX Designer - Responsible for end-to-end design process including user research, wireframing, prototyping, visual design, and design system creation.",
   },
